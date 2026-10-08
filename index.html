@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7d6ff">
+<title>Sparkle the Unicorn – Shivanya's Learning Buddy</title>
+<style>
+  :root{
+    --pink:#ff8fc8; --purple:#a66bff; --blue:#7cc7ff; --mint:#8ff0c4; --yellow:#ffe27a; --peach:#ffb38a;
+    --ink:#5a2d82; --card:#ffffffd9;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{margin:0; min-height:100%}
+  body{
+    font-family:"Comic Sans MS","Chalkboard SE","Comic Neue","Nunito","Baloo 2",system-ui,sans-serif;
+    color:var(--ink);
+    background:linear-gradient(180deg,#ffe3f1 0%,#efe2ff 25%,#dff1ff 50%,#e4fff0 75%,#fff7d6 100%) fixed;
+    -webkit-user-select:none; user-select:none;
+  }
+  .wrap{max-width:760px; margin:0 auto; padding:58px 14px 28px}
+  button{font-family:inherit; color:inherit; cursor:pointer; border:none}
+  /* header */
+  .top{display:flex; align-items:center; gap:12px}
+  .avatar{flex:0 0 auto; width:96px; height:96px; border-radius:50%;
+    display:grid; place-items:center; font-size:62px;
+    background:radial-gradient(circle,#fff 55%,transparent 56%),conic-gradient(#ff8fc8,#ffb38a,#ffe27a,#8ff0c4,#7cc7ff,#a66bff,#ff8fc8);
+    box-shadow:0 6px 18px #a66bff44; animation:bob 2.4s ease-in-out infinite}
+  .avatar.talking{animation:bob 2.4s ease-in-out infinite, wiggle .35s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-6px)}}
+  @keyframes wiggle{50%{rotate:4deg}}
+  .bubble{position:relative; flex:1; background:var(--card); border-radius:26px; padding:14px 18px;
+    font-size:clamp(20px,4.6vw,28px); line-height:1.3; min-height:84px; box-shadow:0 6px 18px #a66bff22}
+  .bubble:before{content:""; position:absolute; left:-12px; top:30px; border:12px solid transparent; border-right-color:var(--card); border-left:0}
+  .heard{min-height:30px; text-align:right; font-size:clamp(17px,3.8vw,22px); opacity:.85; margin:6px 4px 0}
+  .stars{position:fixed; top:10px; right:10px; z-index:5; background:#fff; border-radius:999px; padding:6px 14px;
+    font-size:24px; font-weight:bold; box-shadow:0 4px 12px #0001}
+  h1{font-size:clamp(28px,7vw,44px); text-align:center; margin:14px 0 6px;
+    background:linear-gradient(90deg,#ff5fa8,#ff9f43,#e0b400,#2ecc71,#3d8bff,#a66bff); -webkit-background-clip:text; background-clip:text; color:transparent}
+  /* mic */
+  .mic{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; margin:14px auto;
+    width:min(62vw,250px); height:min(62vw,250px); border-radius:50%; color:#fff;
+    background:radial-gradient(circle at 30% 30%,#ffb3dc,#ff6fb5 45%,#a66bff); font-size:clamp(22px,5vw,30px); font-weight:bold;
+    box-shadow:0 12px 0 #8a4fe0, 0 18px 30px #a66bff66; transition:transform .1s}
+  .mic .ico{font-size:clamp(64px,16vw,96px); line-height:1}
+  .mic:active{transform:translateY(6px); box-shadow:0 6px 0 #8a4fe0}
+  .mic.listening{animation:pulse 1s ease-in-out infinite; background:radial-gradient(circle at 30% 30%,#b9ffe0,#2ecc71 50%,#1e9e5a); box-shadow:0 12px 0 #177a45}
+  @keyframes pulse{50%{transform:scale(1.07)}}
+  .mic.small{width:auto; height:auto; border-radius:999px; flex-direction:row; padding:14px 30px; font-size:26px}
+  .mic.small .ico{font-size:40px}
+  .nomic{text-align:center; font-size:22px; background:#fff9; border-radius:20px; padding:10px; margin:10px 0}
+  /* tiles */
+  .tiles{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:10px}
+  .tile{border-radius:30px; padding:18px 8px; font-size:clamp(22px,5.4vw,32px); font-weight:bold; min-height:150px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; box-shadow:0 8px 0 #0000001a; transition:transform .1s}
+  .tile .e{font-size:clamp(54px,13vw,80px); line-height:1}
+  .tile:active{transform:translateY(5px); box-shadow:0 3px 0 #0000001a}
+  .t1{background:#ffd1e8}.t2{background:#fff0b3}.t3{background:#c9f7df}.t4{background:#d5e9ff}.t5{background:#e6d9ff}.t6{background:#ffdcc7}
+  .chips{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:16px}
+  .chip{background:#fff; border-radius:999px; padding:12px 20px; font-size:24px; box-shadow:0 4px 0 #0000001a}
+  /* lesson */
+  .ltop{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-top:10px}
+  .round{width:76px; height:76px; border-radius:50%; background:#fff; font-size:40px; box-shadow:0 5px 0 #0000001a}
+  .ltop h2{margin:0; font-size:clamp(26px,6vw,38px); text-align:center}
+  .stage{min-height:230px; margin:14px 0; background:#ffffffb3; border-radius:32px; padding:16px;
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px; font-size:clamp(70px,20vw,120px); text-align:center}
+  .stage.count{font-size:clamp(42px,11vw,64px)}
+  .stage .apple{animation:pop .4s backwards}
+  @keyframes pop{from{transform:scale(0)}}
+  .blob{width:min(55vw,220px); height:min(55vw,220px); border-radius:50%; border:6px solid #fff; box-shadow:0 8px 20px #0002}
+  .stage svg{width:min(55vw,220px); height:min(55vw,220px)}
+  .word{font-size:clamp(28px,7vw,42px); width:100%; font-weight:bold}
+  .answers{display:grid; grid-template-columns:repeat(auto-fit,minmax(110px,1fr)); gap:14px}
+  .ans{background:#fff; border-radius:28px; min-height:120px; padding:12px; font-size:clamp(24px,6vw,34px); font-weight:bold;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; box-shadow:0 8px 0 #0000001a; transition:transform .1s}
+  .ans:active{transform:translateY(5px)}
+  .ans .e{font-size:clamp(46px,12vw,68px); line-height:1}
+  .ans .sw{width:56px; height:56px; border-radius:50%; border:4px solid #fff; box-shadow:0 2px 8px #0003}
+  .ans .bigsw{width:96px; height:96px}
+  .ans svg{width:70px; height:70px}
+  .ans.big{font-size:clamp(48px,13vw,72px)}
+  .ans.right{background:#b9ffd9; transform:scale(1.06)}
+  .ans.wrong{animation:shake .4s}
+  @keyframes shake{25%{translate:-10px}75%{translate:10px}}
+  .center{text-align:center}
+  /* intro + confetti */
+  .intro{position:fixed; inset:0; z-index:20; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
+    background:linear-gradient(180deg,#ffd6ec,#e3d6ff,#d6f0ff); text-align:center; padding:20px}
+  .intro .big{font-size:150px; animation:bob 2s ease-in-out infinite}
+  .intro button{font-size:34px; font-weight:bold; padding:24px 40px; border-radius:999px; color:#fff;
+    background:linear-gradient(90deg,#ff6fb5,#a66bff); box-shadow:0 10px 0 #7a3fd0}
+  .confetti{position:fixed; top:-60px; z-index:30; pointer-events:none; font-size:34px; animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(115vh) rotate(540deg)}}
+  .grown{margin-top:28px; font-size:15px; text-align:center; opacity:.8; line-height:1.5}
+  .grown button{background:none; text-decoration:underline; font-size:15px; padding:4px}
+  [hidden]{display:none !important}
+</style>
+</head>
+<body>
+<div class="stars" id="stars" aria-label="stars">⭐ 0</div>
+
+<div class="intro" id="intro">
+  <div class="big">🦄</div>
+  <div style="font-size:30px;font-weight:bold">Hi Shivanya!</div>
+  <button id="startBtn">✨ Meet Sparkle ✨</button>
+</div>
+
+<div class="wrap">
+  <div class="top">
+    <div class="avatar" id="avatar" aria-hidden="true">🦄</div>
+    <div class="bubble" id="bubble">Hi Shivanya! I'm Sparkle! 🌈</div>
+  </div>
+  <div class="heard" id="heard"></div>
+
+  <!-- HOME -->
+  <section id="home">
+    <h1>Hi Shivanya! 🦄</h1>
+    <button class="mic" id="micBig" aria-label="Tap and talk"><span class="ico">🎤</span><span>Tap and talk</span></button>
+    <div class="nomic" id="noMicNote" hidden>👆 Tap the pictures to play with Sparkle!</div>
+    <div class="tiles">
+      <button class="tile t1" data-lesson="colours"><span class="e">🎨</span>Colours</button>
+      <button class="tile t2" data-lesson="numbers"><span class="e">🍎</span>Numbers</button>
+      <button class="tile t3" data-lesson="animals"><span class="e">🐮</span>Animals</button>
+      <button class="tile t4" data-lesson="letters"><span class="e">🔤</span>A for Apple</button>
+      <button class="tile t5" data-lesson="shapes"><span class="e">⭐</span>Shapes</button>
+      <button class="tile t6" data-lesson="habits"><span class="e">🪥</span>Good Habits</button>
+    </div>
+    <div class="chips">
+      <button class="chip" data-chat="tell me a story">📖 Story</button>
+      <button class="chip" data-chat="tell me a joke">😂 Joke</button>
+      <button class="chip" data-chat="sing a song">🎵 Song</button>
+    </div>
+    <div class="grown">
+      <b>For grown-ups:</b> works best in Google Chrome (Android phone, tablet or computer). Please allow the microphone when asked.
+      Nothing is recorded or sent anywhere; only the star count is saved on this device.
+      <button id="resetStars">Reset stars</button>
+    </div>
+  </section>
+
+  <!-- LESSON -->
+  <section id="lesson" hidden>
+    <div class="ltop">
+      <button class="round" id="homeBtn" aria-label="Home">🏠</button>
+      <h2 id="lessonTitle">Colours</h2>
+      <button class="round" id="repeatBtn" aria-label="Say it again">🔊</button>
+    </div>
+    <div class="stage" id="stage"></div>
+    <div class="answers" id="answers"></div>
+    <div class="center"><button class="mic small" id="micSmall" aria-label="Tap and talk"><span class="ico">🎤</span><span>Tap and talk</span></button></div>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+var NAME = "Shivanya";
+var $ = function(id){ return document.getElementById(id); };
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function sample(arr, n, must){ var rest = shuffle(arr.filter(function(x){ return x!==must; })).slice(0, n-1); return shuffle(rest.concat([must])); }
+
+/* ---------- stars (only thing stored, on this device) ---------- */
+var stars = 0;
+try { stars = parseInt(localStorage.getItem("sparkleStars"),10) || 0; } catch(e){}
+function showStars(){ $("stars").textContent = "⭐ " + stars; }
+function addStar(){ stars++; try{ localStorage.setItem("sparkleStars", String(stars)); }catch(e){} showStars(); }
+showStars();
+
+/* ---------- speaking (Web Speech API: SpeechSynthesis) ---------- */
+var synth = window.speechSynthesis || null;
+var voice = null;
+var MALE = /\bmale\b|daniel|arthur|oliver|george|rishi|ravi|hemant|prabhat|james|thomas|fred|alex|aaron|david|mark|guy|ryan|eddy|reed|rocko|male voice/i;
+var FEMALE = /female|woman|samantha|karen|moira|tessa|zira|serena|fiona|kate|susan|aria|jenny|sonia|libby|veena|heera|neerja|kalpana|swara|hazel|victoria|allison|\bava\b|martha|flo\b|sandy|shelley|catherine|kathy|vicki|lekha/i;
+function pickVoice(){
+  if(!synth) return;
+  var vs = synth.getVoices() || [], best = null, bs = -1e9;
+  for(var i=0;i<vs.length;i++){
+    var v = vs[i], L = (v.lang||"").toLowerCase().replace("_","-"), n = v.name || "";
+    if(L.indexOf("en") !== 0) continue;
+    var s = 0;
+    if(MALE.test(n) && !/female/i.test(n)) s += 100;   /* calm male voice, like Jarvis */
+    if(FEMALE.test(n)) s -= 50;
+    if(L === "en-gb") s += 30; else if(L === "en-in") s += 20; else if(L === "en-us") s += 10; else s += 5;
+    if(v.localService) s += 1;
+    if(s > bs){ bs = s; best = v; }
+  }
+  voice = best;
+}
+if(synth){ pickVoice(); if("onvoiceschanged" in synth) synth.onvoiceschanged = pickVoice; }
+
+var EMOJI = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}\u{20E3}]/gu;
+var speakToken = 0;
+function setBubble(text){ $("bubble").textContent = text; }
+function speak(text, done){
+  setBubble(text);
+  var clean = text.replace(EMOJI, "").replace(/\s+/g, " ").trim();
+  var tok = ++speakToken, finished = false;
+  var av = $("avatar");
+  function fin(){ if(finished || tok !== speakToken) return; finished = true; av.classList.remove("talking"); if(done) done(); }
+  if(!synth || !clean){ setTimeout(fin, 900); return; }
+  synth.cancel();
+  if(!voice) pickVoice();
+  var u = new SpeechSynthesisUtterance(clean);
+  if(voice){ u.voice = voice; u.lang = voice.lang; } else { u.lang = "en-GB"; }
+  u.rate = 0.9; u.pitch = 1.0;
+  u.onend = fin; u.onerror = fin;
+  av.classList.add("talking");
+  setTimeout(function(){ if(tok === speakToken) synth.speak(u); }, 80);
+  setTimeout(fin, 2500 + clean.length * 95);   /* safety net if onend never fires */
+}
+function hush(){ speakToken++; if(synth) synth.cancel(); $("avatar").classList.remove("talking"); }
+
+/* ---------- listening (Web Speech API: SpeechRecognition) ---------- */
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+var rec = null, listening = false;
+function micUI(on){ ["micBig","micSmall"].forEach(function(id){ var b=$(id); b.classList.toggle("listening", on); b.lastElementChild.textContent = on ? "I'm listening…" : "Tap and talk"; }); }
+function listen(){
+  if(!SR) return;
+  if(listening){ try{ rec.stop(); }catch(e){} return; }
+  hush();
+  rec = new SR();
+  rec.lang = "en-IN"; rec.interimResults = false; rec.maxAlternatives = 5; rec.continuous = false;
+  var got = false;
+  rec.onresult = function(e){
+    got = true;
+    var r = e.results[0], alts = [];
+    for(var i=0;i<r.length;i++) alts.push(r[i].transcript);
+    heard(alts);
+  };
+  rec.onerror = function(e){
+    got = true;
+    if(e.error === "not-allowed" || e.error === "service-not-allowed")
+      speak("Please ask a grown-up to let me use the microphone. You can tap the pictures too! 👆");
+    else if(e.error === "no-speech")
+      speak("I didn't hear anything. Tap the button and talk to me again! 🎤");
+    else if(e.error !== "aborted")
+      speak("Oops, I couldn't hear you. You can tap the pictures instead! 👆");
+  };
+  rec.onend = function(){ listening = false; micUI(false); };
+  try { rec.start(); listening = true; micUI(true); } catch(e){ listening = false; micUI(false); }
+}
+if(!SR){ $("micBig").hidden = true; $("micSmall").hidden = true; $("noMicNote").hidden = false; }
+
+/* ---------- matching helpers ---------- */
+function norm(t){ return " " + String(t).toLowerCase().replace(/[^a-z0-9\u0900-\u097f' ]+/g, " ").replace(/\s+/g, " ").trim() + " "; }
+function has(t, alias){ return t.indexOf(" " + alias + " ") !== -1; }
+function wordCount(t){ return t.trim() ? t.trim().split(" ").length : 0; }
+/* returns "right", "wrong" or null */
+function judge(alts, opts){
+  for(var i=0;i<alts.length;i++){
+    var t = norm(alts[i]), short = wordCount(t) <= 3 || has(t, "letter");
+    var hitRight = false, hitWrong = false;
+    opts.forEach(function(o){
+      var list = (o.a || []).concat(short ? (o.weak || []) : []);
+      for(var k=0;k<list.length;k++){ if(has(t, list[k])){ if(o.ok) hitRight = true; else hitWrong = true; break; } }
+    });
+    if(hitRight) return "right";
+    if(hitWrong) return "wrong";
+  }
+  return null;
+}
+
+/* ---------- lesson data ---------- */
+var COLOURS = [
+  {n:"red",    hex:"#ff4d4d", a:["red","laal","lal"],                 like:"like a juicy apple 🍎"},
+  {n:"blue",   hex:"#3d8bff", a:["blue","neela","nila","blew"],       like:"like the big sky 🌌"},
+  {n:"green",  hex:"#2ecc71", a:["green","hara","hari"],              like:"like a leaf 🍃"},
+  {n:"yellow", hex:"#ffd93b", a:["yellow","peela","pila"],            like:"like the sunshine ☀️"},
+  {n:"pink",   hex:"#ff8fc8", a:["pink","gulabi"],                    like:"like a pretty flower 🌸"},
+  {n:"orange", hex:"#ff9f43", a:["orange","narangi","santra"],        like:"like a yummy orange 🍊"},
+  {n:"purple", hex:"#a66bff", a:["purple","violet","baingani","jamuni"], like:"like grapes 🍇"},
+  {n:"brown",  hex:"#a0522d", a:["brown","bhura"],                    like:"like chocolate 🍫"},
+  {n:"black",  hex:"#333333", a:["black","kala","kaala"],             like:"like the night sky 🌙"},
+  {n:"white",  hex:"#ffffff", a:["white","safed","safaid"],           like:"like fluffy clouds ☁️"}
+];
+var NUMW = ["zero","one","two","three","four","five","six","seven","eight","nine","ten"];
+var NUMH = ["","ek","do","teen","char","paanch","chhe","saat","aath","nau","das"];
+var NUMWEAK = {1:["won","van"],2:["to","too","tu"],3:["tree","free","tin"],4:["for","fore","chaar"],5:["panch"],6:["sex","che","chhah"],7:["sat"],8:["ate","aat"],9:["nain"],10:["tan","then","dus"]};
+var ANIMALS = [
+  {n:"cow", e:"🐄", s:"Moo",  a:["cow","gaay","gai"],           sa:["moo","mooo","mu","boo"]},
+  {n:"dog", e:"🐶", s:"Woof woof", a:["dog","doggy","puppy","kutta"], sa:["woof","bow","bhow","bark"]},
+  {n:"cat", e:"🐱", s:"Meow", a:["cat","kitty","billi"],        sa:["meow","miaow","mew","meaw"]},
+  {n:"duck",e:"🦆", s:"Quack quack", a:["duck","batakh"],         sa:["quack","quake"]},
+  {n:"lion",e:"🦁", s:"Roar", a:["lion","sher"],                sa:["roar","raw","rawr"]},
+  {n:"sheep",e:"🐑",s:"Baa",  a:["sheep","bhed"],               sa:["baa","ba","bah","maa"]},
+  {n:"rooster",e:"🐓",s:"Cock-a-doodle-doo", a:["rooster","hen","chicken","murga"], sa:["cock","doodle","kukdukoo","kukadu"]},
+  {n:"frog",e:"🐸", s:"Ribbit", a:["frog","mendhak"],           sa:["ribbit","croak"]},
+  {n:"pig", e:"🐷", s:"Oink oink", a:["pig","piggy"],            sa:["oink"]},
+  {n:"horse",e:"🐴",s:"Neigh", a:["horse","ghoda"],             sa:["neigh","nay","hee"]},
+  {n:"elephant",e:"🐘",s:"Toot toot", a:["elephant","haathi","hathi"], sa:["toot","trumpet"]},
+  {n:"bee", e:"🐝", s:"Buzz", a:["bee","honeybee"],             sa:["buzz","bzz"]},
+  {n:"snake",e:"🐍",s:"Hiss", a:["snake","saanp","sanp"],       sa:["hiss","his","sss"]},
+  {n:"owl", e:"🦉", s:"Hoo hoo", a:["owl","ullu"],              sa:["hoo","hoot","who"]}
+];
+var LETTERS = [
+  ["A","Apple","🍎",["a","ay","eh","hey"]],["B","Ball","⚽",["b","be","bee","bi"]],["C","Cat","🐱",["c","see","sea","si"]],
+  ["D","Dog","🐶",["d","dee","di"]],["E","Elephant","🐘",["e","ee","ii"]],["F","Fish","🐟",["f","eff","ef"]],
+  ["G","Grapes","🍇",["g","gee","ji","jee"]],["H","Hat","🎩",["h","aitch","edge","etch"]],["I","Ice cream","🍦",["i","eye","aye"]],
+  ["J","Juice","🧃",["j","jay","je"]],["K","Kite","🪁",["k","kay","ke","okay"]],["L","Lion","🦁",["l","el","ell"]],
+  ["M","Mango","🥭",["m","em"]],["N","Nose","👃",["n","en"]],["O","Owl","🦉",["o","oh","ow"]],["P","Parrot","🦜",["p","pee","pea","pi"]],
+  ["Q","Queen","👑",["q","queue","cue","kyu"]],["R","Rainbow","🌈",["r","are","aar"]],["S","Sun","☀️",["s","es","ess"]],
+  ["T","Tiger","🐯",["t","tee","tea","ti"]],["U","Umbrella","☂️",["u","you","yu"]],["V","Violin","🎻",["v","vee","we"]],
+  ["W","Watch","⌚",["w","double you","double u"]],["Y","Yo-yo","🪀",["y","why","wai"]],["Z","Zebra","🦓",["z","zed","zee"]]
+];
+var SHAPES = [
+  {n:"circle",   c:"#ff8fc8", a:["circle","round","gol"],   svg:'<circle cx="50" cy="50" r="42"/>',                        fact:"Round and round, like a ball! ⚽"},
+  {n:"square",   c:"#7cc7ff", a:["square","box"],          svg:'<rect x="10" y="10" width="80" height="80" rx="4"/>',     fact:"Four sides, all the same, like a window! 🪟"},
+  {n:"triangle", c:"#8ff0c4", a:["triangle","tri"],        svg:'<polygon points="50,8 94,90 6,90"/>',                     fact:"Three sides, like a slice of pizza! 🍕"},
+  {n:"star",     c:"#ffd93b", a:["star","tara","stars"],   svg:'<polygon points="50,5 61,38 96,38 68,59 79,93 50,72 21,93 32,59 4,38 39,38"/>', fact:"Twinkle twinkle little star! ✨"},
+  {n:"heart",    c:"#ff6f91", a:["heart","dil","love"],    svg:'<path d="M50 88C20 65 5 48 5 30 5 15 17 5 30 5c10 0 17 6 20 13 3-7 10-13 20-13 13 0 25 10 25 25 0 18-15 35-45 58z"/>', fact:"A heart full of love! 💖"},
+  {n:"rectangle",c:"#c3a6ff", a:["rectangle","rectangel"], svg:'<rect x="5" y="24" width="90" height="52" rx="4"/>',      fact:"Two long sides and two short sides, like a door! 🚪"},
+  {n:"oval",     c:"#ffb38a", a:["oval","egg","ande"],     svg:'<ellipse cx="50" cy="50" rx="46" ry="30"/>',               fact:"Like an egg! 🥚"},
+  {n:"diamond",  c:"#6fe3e3", a:["diamond","kite"],        svg:'<polygon points="50,4 92,50 50,96 8,50"/>',                fact:"Like a kite in the sky! 🪁"}
+];
+function shapeSVG(s){ return '<svg viewBox="0 0 100 100" aria-hidden="true"><g fill="'+s.c+'" stroke="#fff" stroke-width="4" stroke-linejoin="round">'+s.svg+'</g></svg>'; }
+var HABITS = [
+  {q:"Your teeth feel yucky in the morning. What should we do?", e:"🌅😬",
+   ok:{t:"Brush teeth",e:"🪥",a:["brush","teeth","toothbrush","brushing"]}, no:{t:"Eat sweets",e:"🍬",a:["sweet","sweets","candy","chocolate"]},
+   p:"Brush, brush, brush! Up and down, round and round. Sparkly teeth! ✨"},
+  {q:"Before we eat food, what should we do?", e:"🍛",
+   ok:{t:"Wash hands",e:"🧼",a:["wash","hands","hand","soap"]}, no:{t:"Play in mud",e:"🟤",a:["mud","play"]},
+   p:"Wash with soap and water. Bye bye, germs! 🫧"},
+  {q:"You want a cookie. What magic word do you say?", e:"🍪",
+   ok:{t:"Please",e:"🙏",a:["please","plz","pleeease"]}, no:{t:"Give me now!",e:"😤",a:["give","now"]},
+   p:"Please is a magic word! 🪄"},
+  {q:"Someone gives you a present. What do you say?", e:"🎁",
+   ok:{t:"Thank you",e:"💖",a:["thank","thanks","thankyou","dhanyavad","shukriya"]}, no:{t:"Run away",e:"🏃",a:["run","away"]},
+   p:"Thank you makes everyone smile! 😊"},
+  {q:"You played a lot and now you are thirsty. What should you drink?", e:"🏃‍♀️💦",
+   ok:{t:"Water",e:"💧",a:["water","paani","pani"]}, no:{t:"Fizzy soda",e:"🥤",a:["soda","cola","fizzy","cold drink"]},
+   p:"Water makes you strong and happy! 💪"},
+  {q:"Playtime is over and toys are on the floor. What do we do?", e:"🧸🚂🧩",
+   ok:{t:"Put toys away",e:"🧺",a:["put","tidy","clean","pick","away","basket"]}, no:{t:"Leave them",e:"🙈",a:["leave"]},
+   p:"Clean-up time! Every toy goes back home. 🏠"},
+  {q:"Achoo! You need to sneeze. What should you do?", e:"🤧",
+   ok:{t:"Cover with elbow",e:"💪",a:["elbow","cover","tissue","hanky"]}, no:{t:"Sneeze on friends",e:"😮",a:["friends","friend"]},
+   p:"Cover your sneeze, so germs don't fly! 🌬️"},
+  {q:"We want to cross the road. What do we do?", e:"🚗🚦",
+   ok:{t:"Hold a grown-up's hand",e:"🤝",a:["hold","hand","hands","mama","papa","mummy","daddy"]}, no:{t:"Run across",e:"🏃",a:["run","across"]},
+   p:"Hold hands and look both ways. Safe and sound! 🚦"},
+  {q:"Your friend is feeling sad. What can you do?", e:"😢",
+   ok:{t:"Give a hug",e:"🤗",a:["hug","share","help","sorry"]}, no:{t:"Laugh at them",e:"😝",a:["laugh"]},
+   p:"A hug makes a sad friend feel better! 💞"},
+  {q:"It is night time. What do we do?", e:"🌙",
+   ok:{t:"Go to sleep",e:"😴",a:["sleep","bed","night","sleeping"]}, no:{t:"Watch TV all night",e:"📺",a:["tv","television","cartoon"]},
+   p:"Sleep helps you grow big and strong! Sweet dreams! 🌙"}
+];
+
+/* ---------- question generators ---------- */
+var last = {};
+function fresh(key, arr){ var x; do { x = pick(arr); } while(arr.length > 1 && x === last[key]); last[key] = x; return x; }
+var LESSONS = {
+  colours:{title:"🎨 Colours", make:function(){
+    var c = fresh("c", COLOURS), set = sample(COLOURS, 3, c);
+    if(Math.random() < 0.5){
+      return {stage:'<div class="blob" style="background:'+c.hex+'"></div>', say:"What colour is this?",
+        opts:set.map(function(x){ return {html:'<span class="sw" style="background:'+x.hex+'"></span>'+x.n, a:x.a, ok:x===c}; }),
+        praise:"It's "+c.n+", "+c.like};
+    }
+    return {stage:'<div class="word">Find '+c.n+'!</div>', say:"Can you find "+c.n+"? Tap the "+c.n+" one!",
+      opts:set.map(function(x){ return {html:'<span class="sw bigsw" style="background:'+x.hex+'"></span>', a:x.a, ok:x===c, label:x.n}; }),
+      praise:"That's "+c.n+", "+c.like};
+  }},
+  numbers:{title:"🍎 Numbers", count:true, make:function(){
+    var n = fresh("n", [1,2,3,4,5,6,7,8,9,10]), set = sample([1,2,3,4,5,6,7,8,9,10], 3, n), s = "";
+    for(var i=0;i<n;i++) s += '<span class="apple" style="animation-delay:'+(i*0.08)+'s">🍎</span>';
+    var counting = NUMW.slice(1, n+1).map(function(w){ return w.charAt(0).toUpperCase()+w.slice(1); }).join(", ");
+    return {stage:s, say: n===1 ? "How many apples? Let's count!" : "How many apples? Let's count them!",
+      opts:set.map(function(x){ return {html:String(x), big:true, a:[String(x), NUMW[x], NUMH[x]], weak:NUMWEAK[x]||[], ok:x===n}; }),
+      praise: n + (n===1 ? " apple! " : " apples! ") + counting + "!"};
+  }},
+  animals:{title:"🐮 Animals", make:function(){
+    var an = fresh("an", ANIMALS), set = sample(ANIMALS, 3, an);
+    if(Math.random() < 0.5){
+      return {stage:'<div class="word">'+an.s+'!</div>', say:"Who says "+an.s+"?",
+        opts:set.map(function(x){ return {html:'<span class="e">'+x.e+'</span>'+x.n, a:x.a, ok:x===an}; }),
+        praise:"The "+an.n+" says "+an.s+"! "+an.e};
+    }
+    return {stage:an.e, say:"This is a "+an.n+". What does a "+an.n+" say?",
+      opts:set.map(function(x){ return {html:x.s, a:x.sa, ok:x===an}; }),
+      praise:"The "+an.n+" says "+an.s+"! "+an.e};
+  }},
+  letters:{title:"🔤 A for Apple", make:function(){
+    var L = fresh("l", LETTERS), set = sample(LETTERS, 3, L);
+    return {stage:'<span>'+L[2]+'</span><div class="word">'+L[1]+'</div>', say:"This is "+L[1]+". "+L[1]+" starts with which letter?",
+      opts:set.map(function(x){ return {html:x[0]+' '+x[0].toLowerCase(), big:true, a:["letter "+x[0].toLowerCase()], weak:x[3], ok:x===L}; }),
+      praise:L[0]+" is for "+L[1]+"! "+L[2]};
+  }},
+  shapes:{title:"⭐ Shapes", make:function(){
+    var s = fresh("s", SHAPES), set = sample(SHAPES, 3, s);
+    if(Math.random() < 0.5){
+      return {stage:shapeSVG(s), say:"What shape is this?",
+        opts:set.map(function(x){ return {html:shapeSVG(x)+x.n, a:x.a, ok:x===s}; }),
+        praise:"It's a "+s.n+"! "+s.fact};
+    }
+    return {stage:'<div class="word">Find the '+s.n+'!</div>', say:"Can you find the "+s.n+"?",
+      opts:set.map(function(x){ return {html:shapeSVG(x), a:x.a, ok:x===s, label:x.n}; }),
+      praise:"That's the "+s.n+"! "+s.fact};
+  }},
+  habits:{title:"🪥 Good Habits", make:function(){
+    var h = fresh("h", HABITS);
+    return {stage:h.e, say:h.q,
+      opts:shuffle([h.ok, h.no]).map(function(x){ return {html:'<span class="e">'+x.e+'</span>'+x.t, a:x.a, ok:x===h.ok}; }),
+      praise:h.p};
+  }}
+};
+
+/* ---------- screens ---------- */
+var mode = "home", q = null, busy = false;
+function goHome(say){
+  hush(); mode = "home"; q = null; busy = false; $("heard").textContent = "";
+  $("lesson").hidden = true; $("home").hidden = false; window.scrollTo(0,0);
+  speak(say || "Yay, we're home! What do you want to play, Shivanya? 🌈");
+}
+function startLesson(key, intro){
+  if(!LESSONS[key]) return;
+  mode = key; $("heard").textContent = ""; $("home").hidden = true; $("lesson").hidden = false; window.scrollTo(0,0);
+  $("lessonTitle").textContent = LESSONS[key].title;
+  nextQuestion(intro);
+}
+function nextQuestion(intro){
+  if(mode === "home") return;
+  var L = LESSONS[mode]; q = L.make(); busy = false;
+  var st = $("stage"); st.innerHTML = q.stage; st.classList.toggle("count", !!L.count);
+  var box = $("answers"); box.innerHTML = "";
+  q.opts.forEach(function(o){
+    var b = document.createElement("button");
+    b.className = "ans" + (o.big ? " big" : ""); b.innerHTML = o.html;
+    if(o.label) b.setAttribute("aria-label", o.label);
+    b.addEventListener("click", function(){ answer(o, b); });
+    o.btn = b; box.appendChild(b);
+  });
+  speak((intro ? intro + " " : "") + q.say);
+}
+function answer(o, btn){
+  if(busy || !q) return;
+  if(listening){ try{ rec.abort(); }catch(e){} }
+  if(o.ok) correct(btn); else wrong(btn);
+}
+function correct(btn){
+  busy = true; addStar(); confetti();
+  if(btn) btn.classList.add("right");
+  var extra = (stars % 5 === 0) ? " Wow, " + stars + " stars! You're a superstar! 🌟" : "";
+  speak("Great job, Shivanya! ⭐ " + q.praise + extra, function(){ setTimeout(function(){ if(busy) nextQuestion(); }, 500); });
+}
+function wrong(btn){
+  if(btn){ btn.classList.remove("wrong"); void btn.offsetWidth; btn.classList.add("wrong"); }
+  speak("Let's try again! 💪 " + q.say);
+}
+
+/* ---------- celebration ---------- */
+function confetti(){
+  var bits = ["⭐","✨","🌈","💖","🦄","🌸","💫"];
+  for(var i=0;i<28;i++){
+    var s = document.createElement("span"); s.className = "confetti"; s.textContent = pick(bits);
+    s.style.left = (Math.random()*100) + "vw"; s.style.animationDuration = (1.4 + Math.random()*1.4) + "s";
+    s.style.animationDelay = (Math.random()*0.4) + "s"; s.style.fontSize = (24 + Math.random()*24) + "px";
+    document.body.appendChild(s);
+    setTimeout(function(el){ return function(){ el.remove(); }; }(s), 3400);
+  }
+}
+
+/* ---------- free chat ---------- */
+var STORY = "Once upon a time, a little unicorn named Sparkle lived on a rainbow. 🌈 One night she found a tiny star crying, because it was lost. Sparkle gave the star a ride on her back, all the way home to the moon. 🌙 The star said thank you, and the whole sky twinkled with happiness! The end. ✨";
+var JOKES = [
+  "Why did the cow go to space? To see the mooooon! 🐄🌙 Hee hee!",
+  "What do you call a sleeping dinosaur? A dino-snore! 🦕😴",
+  "Why are fish so clever? Because they live in schools! 🐟📚",
+  "What do unicorns put on their toast? Rainbow jam! 🦄🍞"
+];
+var RHYME = "Let's count! One, two, unicorn shoe! 🦄 Three, four, open the door! 🚪 Five, six, pick up sticks! 🪵 Seven, eight, don't be late! ⏰ Nine, ten, let's count again! 🔟";
+var CHAT = [
+  {k:/\blove you\b/, r:"I love you too, Shivanya! 💖"},
+  {k:/\b(thank you|thanks|thankyou)\b/, r:"You're welcome! You have such lovely manners! 🌟"},
+  {k:/\b(your name|who are you|what are you)\b/, r:"I'm Sparkle, a magic rainbow unicorn! 🦄🌈 And you are Shivanya, my best friend!"},
+  {k:/\bmy name\b/, r:"Shivanya is such a beautiful name! 💖"},
+  {k:/\b(story|stories|kahani)\b/, r:STORY},
+  {k:/\b(joke|jokes|funny)\b/, r:function(){ return pick(JOKES); }},
+  {k:/\b(sing|song|songs|rhyme|poem|gana|gaana)\b/, r:RHYME},
+  {k:/\bstars?\b/, r:function(){ return "You have " + stars + " stars! ⭐ Let's play to get more!"; }},
+  {k:/\b(colou?rs?|rang)\b/, go:"colours", r:"Yay, colours! 🎨"},
+  {k:/\b(numbers?|count|counting|ginti|apples?)\b/, go:"numbers", r:"Let's count apples! 🍎"},
+  {k:/\b(animals?|janwar|moo|cow|dog)\b/, go:"animals", r:"Animal time! 🐮"},
+  {k:/\b(letters?|abc|alphabet|words?)\b/, go:"letters", r:"A for Apple! Let's play! 🔤"},
+  {k:/\b(shapes?|circle|triangle|square)\b/, go:"shapes", r:"Shapes are fun! ⭐"},
+  {k:/\b(habits?|brush|teeth|wash)\b/, go:"habits", r:"Let's learn good habits! 🪥"},
+  {k:/\bunicorns?\b/, r:"Unicorns are the best! 🦄 I have a rainbow mane and a sparkly horn, and I love playing with you!"},
+  {k:/\bhow are you\b/, r:"I'm sparkly and happy! ✨ How are you, Shivanya?"},
+  {k:/\b(bye|goodbye|good night|goodnight|tata|see you)\b/, r:"Bye bye, Shivanya! 👋 Come back and play with me soon! 💖", home:true},
+  {k:/\b(sad|cry|crying|hurt|scared)\b/, r:"Oh, here's a big unicorn hug for you! 🤗 Go and tell mama or papa how you feel. They love you so much!"},
+  {k:/\b(happy|good|fine|great|awesome)\b/, r:"Yay! I'm happy too! 😊 Shall we play a game?"},
+  {k:/\b(hungry|eat|food|khana)\b/, r:"Yummy! Remember to wash your hands before you eat! 🧼"},
+  {k:/\b(home|stop|menu)\b/, home:true},
+  {k:/\b(hello|hi|hii|hey|namaste|namaskar|good morning|good evening)\b/, r:"Hello Shivanya! 🦄 I'm so happy to see you! Do you want to play colours, numbers or animals?"}
+];
+function chat(alts){
+  for(var i=0;i<alts.length;i++){
+    var t = norm(alts[i]);
+    for(var j=0;j<CHAT.length;j++){
+      var c = CHAT[j];
+      if(c.k.test(t)){
+        var r = typeof c.r === "function" ? c.r() : c.r;
+        if(c.go){ startLesson(c.go, r); return true; }
+        if(c.home){ goHome(r); return true; }
+        speak(r); return true;
+      }
+    }
+  }
+  return false;
+}
+function heard(alts){
+  $("heard").textContent = "You said: \u201C" + alts[0] + "\u201D 🎤";
+  if(mode !== "home" && q && !busy){
+    var res = judge(alts, q.opts);
+    if(res){
+      var target = q.opts.filter(function(o){ return o.ok; })[0];
+      if(res === "right") return correct(target.btn); else return wrong(null);
+    }
+    var t = norm(alts[0]);
+    if(/\b(home|stop|menu|bye|story|joke|sing|song)\b/.test(t)) { chat(alts); return; }
+    speak("Hmm, let's try again! 💪 " + q.say + " You can tap the answer too!");
+    return;
+  }
+  if(!chat(alts)) speak("Ooh, that sounds interesting, Shivanya! 🌈 Do you want to play colours or numbers, or hear a story?");
+}
+
+/* ---------- wiring ---------- */
+$("micBig").addEventListener("click", listen);
+$("micSmall").addEventListener("click", listen);
+$("homeBtn").addEventListener("click", function(){ goHome(); });
+$("repeatBtn").addEventListener("click", function(){ if(q) speak(q.say); });
+$("bubble").addEventListener("click", function(){ speak($("bubble").textContent); });
+Array.prototype.forEach.call(document.querySelectorAll("[data-lesson]"), function(b){
+  b.addEventListener("click", function(){ startLesson(b.getAttribute("data-lesson")); });
+});
+Array.prototype.forEach.call(document.querySelectorAll("[data-chat]"), function(b){
+  b.addEventListener("click", function(){ chat([b.getAttribute("data-chat")]); });
+});
+$("resetStars").addEventListener("click", function(){
+  if(confirm("Reset Shivanya's stars to zero?")){ stars = 0; try{ localStorage.setItem("sparkleStars","0"); }catch(e){} showStars(); }
+});
+function hello(){
+  $("intro").hidden = true;
+  speak(SR ? "Hi Shivanya! I'm Sparkle, your unicorn friend! 🦄 Tap a picture to play, or tap the big pink button and talk to me!"
+           : "Hi Shivanya! I'm Sparkle, your unicorn friend! 🦄 Tap a picture and let's play!");
+}
+$("startBtn").addEventListener("click", hello);
+if(location.hash === "#skip-intro") $("intro").hidden = true;
+window.SparkleTest = {judge:judge, chat:chat, heard:heard, LESSONS:LESSONS, startLesson:startLesson, goHome:goHome, get q(){ return q; }};
+})();
+</script>
+</body>
+</html>
